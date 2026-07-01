@@ -24,6 +24,9 @@ jobs:
           python-version: '3.11'
 
       - name: Generate today's tip
+        env:
+          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
         run: python scripts/generate_tip.py
 
       - name: Commit and push if changed

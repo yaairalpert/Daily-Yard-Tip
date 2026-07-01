@@ -47,6 +47,23 @@ needs to stay on.
 After that, it updates itself every morning automatically. No further action
 needed.
 
+## WhatsApp delivery (optional)
+
+The workflow will also WhatsApp you the tip each morning via
+[CallMeBot](https://www.callmebot.com/) (free, personal-use API) — if you set
+it up. Skipped silently if not configured.
+
+1. Save **+34 644 91 96 80** as a contact in your phone (any name).
+2. From WhatsApp, message that contact: `I allow callmebot to send me messages`
+3. Wait for a reply containing your API key (usually under 2 minutes; if
+   nothing arrives, try again after 24 hours).
+4. In your GitHub repo: **Settings → Secrets and variables → Actions →
+   New repository secret**. Add two secrets:
+   - `CALLMEBOT_PHONE` — your WhatsApp number with country code, e.g. `+12015551234`
+   - `CALLMEBOT_APIKEY` — the key CallMeBot sent you
+5. Re-run the workflow manually (Actions tab → Run workflow) to test it —
+   you should get a WhatsApp message within a few seconds of the run finishing.
+
 ## Changing location
 
 Edit the constants at the top of `scripts/generate_tip.py`

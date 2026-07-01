@@ -8,6 +8,8 @@ To change location: update LATITUDE / LONGITUDE / LOCATION_LABEL below.
 (Current values: South Orange, NJ 07079)
 """
 import json
+import os
+import urllib.parse
 import urllib.request
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -435,6 +437,45 @@ def render_html(days, season, tip, generated_at: datetime) -> str:
 """
 
 
+def build_whatsapp_text(days, season, tip, generated_at: datetime) -> str:
+    day_lines = []
+    for i, d in enumerate(days):
+        day_lines.append(f"{DAY_LABELS[i]}: {d['icon']} {d['hi']}°/{d['lo']}° ({d['label']})")
+    weather_block = "\n".join(day_lines)
+    steps_block = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(tip["steps"]))
+    return (
+        f"*\U0001F331 Today's Yard Tip — {LOCATION_LABEL}*\n"
+        f"{generated_at.strftime('%b %-d, %Y')} · {season.capitalize()}\n\n"
+        f"{weather_block}\n\n"
+        f"*{tip['headline']}*\n"
+        f"{steps_block}\n\n"
+        f"_Why: {tip['why']}_"
+    )
+
+
+def send_whatsapp(message: str) -> None:
+    """Sends the tip via CallMeBot's free WhatsApp API. No-op if the
+    CALLMEBOT_PHONE / CALLMEBOT_APIKEY secrets aren't set. Never raises —
+    a WhatsApp send failure should not block the page update."""
+    phone = os.environ.get("CALLMEBOT_PHONE")
+    apikey = os.environ.get("CALLMEBOT_APIKEY")
+    if not phone or not apikey:
+        print("CALLMEBOT_PHONE / CALLMEBOT_APIKEY not set — skipping WhatsApp send.")
+        return
+    url = (
+        "https://api.callmebot.com/whatsapp.php"
+        f"?phone={urllib.parse.quote(phone)}"
+        f"&text={urllib.parse.quote(message)}"
+        f"&apikey={urllib.parse.quote(apikey)}"
+    )
+    try:
+        with urllib.request.urlopen(url, timeout=20) as resp:
+            body = resp.read().decode(errors="replace")
+            print(f"CallMeBot response: {resp.status} {body[:200]}")
+    except Exception as e:
+        print(f"WhatsApp send failed (non-fatal): {e}")
+
+
 def main():
     data = fetch_forecast()
     days = build_days(data["daily"])
@@ -444,11 +485,13 @@ def main():
     tip = choose_tip(days, season, day_index)
     html = render_html(days, season, tip, now)
 
-    import os
     os.makedirs("docs", exist_ok=True)
     with open("docs/index.html", "w", encoding="utf-8") as f:
         f.write(html)
     print(f"Wrote docs/index.html — season={season}, tip='{tip['headline']}'")
+
+    whatsapp_text = build_whatsapp_text(days, season, tip, now)
+    send_whatsapp(whatsapp_text)
 
 
 if __name__ == "__main__":
