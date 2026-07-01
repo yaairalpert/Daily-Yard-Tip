@@ -3,26 +3,145 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Today's Yard Tip</title>
+<title>Today's Yard Tip — South Orange, NJ</title>
 <style>
   :root { color-scheme: light; }
+  * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: #ffffff;
     color: #1f2a1f;
-    padding: 40px 20px;
+    padding: 20px;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .title { font-size: 20px; font-weight: 700; color: #2f5233; margin: 0; }
+  .subtitle { font-size: 13px; color: #6b7a6b; margin-top: 2px; }
+  .badge {
+    background: #eaf3ea;
+    color: #2f5233;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .weather-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .day-card {
+    background: #f7faf7;
+    border: 1px solid #e3ece3;
+    border-radius: 12px;
+    padding: 12px 10px;
     text-align: center;
   }
-  h1 { color: #2f5233; font-size: 20px; }
-  p { color: #6b7a6b; font-size: 14px; max-width: 480px; margin: 8px auto; line-height: 1.5; }
-  code { background: #f7faf7; border: 1px solid #e3ece3; border-radius: 6px; padding: 2px 6px; }
+  .day-card .day-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7a6b; letter-spacing: 0.04em; }
+  .day-card .icon { font-size: 26px; margin: 6px 0 4px; }
+  .day-card .temps { font-size: 14px; font-weight: 700; color: #1f2a1f; }
+  .day-card .precip { font-size: 11px; color: #4a7a4a; margin-top: 2px; }
+  .tip-card {
+    background: linear-gradient(135deg, #2f5233, #3d6b42);
+    border-radius: 16px;
+    padding: 20px 22px;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .tip-card .tip-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.85;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .tip-card h2 { font-size: 17px; margin: 0 0 12px; line-height: 1.35; }
+  .tip-card ol { margin: 0; padding-left: 20px; }
+  .tip-card li { margin-bottom: 8px; font-size: 14px; line-height: 1.45; }
+  .tip-card li:last-child { margin-bottom: 0; }
+  .why {
+    background: #f7faf7;
+    border: 1px solid #e3ece3;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #445544;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .why b { color: #2f5233; }
+  .footer {
+    font-size: 11px;
+    color: #93a293;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
 </style>
 </head>
 <body>
-  <h1>Today's Yard Tip is warming up 🌱</h1>
-  <p>This page hasn't run its first update yet. Go to the <b>Actions</b> tab in this repo,
-  open <b>Update Daily Yard Tip</b>, and click <b>Run workflow</b> to generate the first tip.
-  After that, it updates automatically every morning.</p>
+<div class="wrap">
+
+  <div class="header">
+    <div>
+      <p class="title">Today's Yard Tip</p>
+      <p class="subtitle">South Orange, NJ &middot; 07079 &middot; Summer</p>
+    </div>
+    <span class="badge">Updated Jul 1, 2026</span>
+  </div>
+
+  <div class="weather-strip">
+    <div class="day-card">
+      <div class="day-label">Today</div>
+      <div class="icon">🌤️</div>
+      <div class="temps">98° / 74°</div>
+      <div class="precip">Mostly clear</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Tomorrow</div>
+      <div class="icon">☀️</div>
+      <div class="temps">106° / 80°</div>
+      <div class="precip">Clear</div>
+    </div>
+    <div class="day-card">
+      <div class="day-label">Day 3</div>
+      <div class="icon">🌦️</div>
+      <div class="temps">105° / 76°</div>
+      <div class="precip">26% rain</div>
+    </div>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-label">Do this today</div>
+    <h2>Heat spike coming — adjust watering and mowing height</h2>
+    <ol>
+      <li>Water deeply (about 1 inch) before 9am, not in the evening — overnight moisture on hot leaves invites fungus.</li>
+      <li>Raise the mower deck a notch — taller grass shades its own roots and holds moisture better in a heat spike.</li>
+      <li>Check new/young plantings and container plants twice a day — they dry out fastest and show stress first.</li>
+      <li>Avoid mowing during the hottest part of the day — it stresses grass that's already fighting heat.</li>
+    </ol>
+  </div>
+
+  <div class="why">
+    <b>Why:</b> Grass and young plants lose far more moisture than they can take up once highs push past 90°F, so watering timing and mower height matter more than usual.
+  </div>
+
+  <div class="footer">
+    Auto-generated daily from the live 3-day forecast for 07079, current season, and NJ lawn/garden best practices.<br>
+    Refreshes every morning — just reload this page.
+  </div>
+
+</div>
 </body>
 </html>
