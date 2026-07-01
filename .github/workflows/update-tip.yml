@@ -1,0 +1,39 @@
+name: Update Daily Yard Tip
+
+on:
+  schedule:
+    # 10:05 UTC = 6:05am EDT (roughly Mar-Nov, daylight saving)
+    - cron: '5 10 * 3-11 *'
+    # 11:05 UTC = 6:05am EST (roughly Dec-Feb, standard time)
+    - cron: '5 11 * 12,1,2 *'
+  workflow_dispatch: {}   # lets you trigger it manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-tip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate today's tip
+        run: python scripts/generate_tip.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update daily yard tip $(date -u +%Y-%m-%d)"
+            git push
+          fi
