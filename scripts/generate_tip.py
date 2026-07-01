@@ -437,18 +437,37 @@ def render_html(days, season, tip, generated_at: datetime) -> str:
 """
 
 
+KEYCAP_DIGITS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣",
+                  "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+DIVIDER = "─" * 15  # ─────────────── (WhatsApp text has no colors/cards, so this
+                          # divider + bold/italic markers are the closest visual
+                          # equivalent to the artifact's card layout)
+
+
 def build_whatsapp_text(days, season, tip, generated_at: datetime) -> str:
-    day_lines = []
+    weather_lines = []
     for i, d in enumerate(days):
-        day_lines.append(f"{DAY_LABELS[i]}: {d['icon']} {d['hi']}°/{d['lo']}° ({d['label']})")
-    weather_block = "\n".join(day_lines)
-    steps_block = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(tip["steps"]))
+        precip = f"{d['precip_prob']}% rain" if d["precip_prob"] >= 15 else d["label"]
+        weather_lines.append(f"{d['icon']} {DAY_LABELS[i]} {d['hi']}°/{d['lo']}° · {precip}")
+    weather_block = "\n".join(weather_lines)
+
+    steps_block = "\n".join(
+        f"{KEYCAP_DIGITS[i] if i < len(KEYCAP_DIGITS) else f'{i + 1}.'} {s}"
+        for i, s in enumerate(tip["steps"])
+    )
+
+    date_label = generated_at.strftime("%b %-d, %Y")
+    season_label = season.capitalize()
+
     return (
-        f"*\U0001F331 Today's Yard Tip — {LOCATION_LABEL}*\n"
-        f"{generated_at.strftime('%b %-d, %Y')} · {season.capitalize()}\n\n"
-        f"{weather_block}\n\n"
+        f"\U0001F331 *TODAY'S YARD TIP*\n"
+        f"{LOCATION_LABEL} · {date_label} · {season_label}\n"
+        f"{DIVIDER}\n"
+        f"{weather_block}\n"
+        f"{DIVIDER}\n"
         f"*{tip['headline']}*\n"
-        f"{steps_block}\n\n"
+        f"{steps_block}\n"
+        f"{DIVIDER}\n"
         f"_Why: {tip['why']}_"
     )
 
